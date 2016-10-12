@@ -1,0 +1,57 @@
+/** --------------------------------------------------------------
+ * Baddie from CSS sprite.
+ *
+ */
+@tile-size:32px;
+@tile-offset:34px;
+
+#boulder-dash #flash {
+    width: @tile-size*24;
+    height: @tile-size*24;
+}
+
+#boulder-dash #game-wrapper {
+    width: inherit;
+    height: inherit;
+    position: absolute;
+}
+
+#baddie1{
+    position: absolute;
+}
+
+#boulder-dash .baddie {
+    z-index: 10;
+    width: @tile-size;
+    height: @tile-size;
+    background-image: url(../img/tiles/boulder_geek.png);background-repeat:no-repeat;
+  .transition-property(e('left,top'));
+  .transition-duration(0.2s);
+  .transition-timing-function(ease);
+  &.up{background-position:-@tile-offset*3 0;}
+  &.down{background-position:-@tile-offset*2 0;}
+  &.left{background-position:-@tile-offset*1 0;}
+  &.right{background-position:0 0;}
+}
+
+
+/** --------------------------------------------------------------
+ * Boulder Dash Gameplan
+ *
+ */
+//@bgcolor:green;
+.tile, .t, .block, .b{width:@tile-size;height:@tile-size;float:left;background-repeat:no-repeat;}
+.t12{background-image:url(../img/tiles/floor/grass0.png);}
+.t13{background-image:url(../img/tiles/floor/grass1.png);}
+.t14{background-image:url(../img/tiles/floor/grass2.png);}
+.t15{background-image:url(../img/tiles/floor/grass_n.png);}
+.t16{background-image:url(../img/tiles/floor/grass_nw.png);}
+.t17{background-image:url(../img/tiles/floor/grass_w.png);}
+.t18{background-image:url(../img/tiles/floor/grass_full.png);}
+.t19{background-image:url(../img/tiles/floor/grass_sw.png);}
+.t20{background-image:url(../img/tiles/floor/grass_s.png);}
+.t21{background-image:url(../img/tiles/floor/grass_ne.png);}
+.t22{background-image:url(../img/tiles/floor/grass_se.png);}
+
+
+.b11{background-image:url(../img/tiles/wall/brick_brown-vines1.png);}
