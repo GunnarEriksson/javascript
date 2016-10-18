@@ -1,0 +1,190 @@
+/**
+ * Here comes specific style for a certain test program.
+ */
+@the-width:(250*3+2*@magic-number*2+6);
+
+.box {
+    border: 1px solid #eee;
+    .border-radius(10px);
+    .clearfix();
+    float: left;
+    margin-bottom: @magic-number;
+    margin-right: @magic-number;
+    padding: @magic-number/2;
+    position: relative;
+    width: 250px;
+
+    img {
+        float:right;
+        padding-bottom: 1em;
+        padding-left: 1em;
+    }
+
+    h1:hover,
+    p:hover,
+    img:hover {
+        cursor: pointer;
+    }
+
+    h1 {
+       color: #666;
+    }
+
+    .minimize {
+        z-index: 10;
+        position: absolute;
+        top: 4px;
+        left:(@the-width);
+        height: 6px;
+        line-height: 0;
+        padding: 3px;
+        margin: 0;
+        border: 2px solid #999;
+        .border-radius(2px);
+        color: #999;
+        &:hover {
+            cursor:pointer;
+        }
+    }
+
+    &.fullwidth {
+        width: @the-width;
+    }
+
+    .example,
+    .minimize,
+     p,
+     form,
+     div {
+        display: none;
+     }
+}
+
+.dark {
+    background-color: #333;
+    color: #eee;
+}
+
+.grey {
+    color: #808080;
+}
+
+.pink {
+    background-color: pink;
+    color: white;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.thumbnail {
+    width: 80px;
+}
+
+div.palette {
+    height: 40px;
+    width: 40px;
+    border: 1px solid #ccc;
+    float: left;
+    margin: 2px;
+    display: block;
+    &:hover {
+        cursor: crosshair;
+    }
+}
+
+#box3 input[type=button],
+#box4 input[type=button] {
+    width: auto;
+}
+
+/**
+ * Lightbox
+ */
+#overlay {
+    background: black no-repeat scroll center center;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index:998;
+}
+
+#lightbox {
+    position: fixed;
+    z-index:999;
+}
+
+
+/**
+ * Gallery
+ */
+@gallery-bg-color: #333;
+@gallery-height: @gallery-width / (4/3) + @gallery-padding * 3px;
+@gallery-padding: 10px;
+@gallery-small-image-size: 40px;
+@gallery-width: 600px;
+
+.gallery {
+    background-color: @gallery-bg-color;
+    margin: 0 auto;
+    margin-bottom: 1em;
+    min-height: @gallery-height;
+    padding: @gallery-padding;
+    width: @gallery-width;
+    .gallery-current {
+        height: @gallery-height - 80 - @gallery-padding*3;
+        margin: 0 auto;
+        margin-bottom: @gallery-padding;
+        width: @gallery-width - @gallery-padding*2;
+        img {
+            display: block;
+            float: none;
+            margin: 0 auto;
+            padding: 0;
+        }
+    }
+
+    .gallery-all {
+        .clearfix();
+        margin: 0 auto;
+        width: @gallery-width - @gallery-padding*2;
+        img {
+            border: 1px solid transparent;
+            float: left;
+            height: @gallery-small-image-size;
+            padding: 3px;
+            width: @gallery-small-image-size;
+
+            &:hover, &.selected {
+                border-color: #eee;
+            }
+        }
+    }
+}
+
+
+/**
+ * Slideshow
+ */
+ @slideshow-width: 800px;
+ @slideshow-height: 300px;
+ @slideshow-bg-color: #eee;
+ @slideshow-z-index: 500;
+
+ .slideshow {
+     width: @slideshow-width;
+     height:@slideshow-height;
+     background-color:@slideshow-bg-color;
+     position:relative;
+     z-index:@slideshow-z-index;
+     img{
+         margin:0;
+         padding:0;
+         position:absolute;
+         width:@slideshow-width;
+         height:@slideshow-height;
+     }
+ }
