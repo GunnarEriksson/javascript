@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Hem | Javascript";
+$title = "Hem | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 <article>
@@ -9,7 +9,7 @@ include(__DIR__ . "/../incl/header.php");
     <p>Jag heter Gunnar Eriksson och bor i Karlskrona även om jag vistas under
     längre perioder i Södra Sandby utanför Lund.</p>
     <p>Jag har arbetat länge som teamledare, teknisk koordinator, systemutvecklare
-    i Java och C++. Jag läser för nuvarande Databaser, HTML, CSS, Javascript och
+    i Java och C++. Jag läser för nuvarande Databaser, HTML, CSS, JavaScript och
     PHP 30hp på halvfart på Blekinge Tekniska Högskola.</p>
 
     <p>Jag har tidigare gjort några hemsidor i HTML och CSS, men kände att jag

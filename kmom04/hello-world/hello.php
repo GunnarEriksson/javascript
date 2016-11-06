@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Hello World | Javascript";
+$title = "Hello World | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 
@@ -28,7 +28,7 @@ function helloMyNumber() {
   paragraph.innerHTML = paragraph.innerHTML + ' Your\'e lucky number is: ' + yourLuckyNumber + '. Mine is: ' + myLuckyNumber + '. They did ' + (yourLuckyNumber == myLuckyNumber ? 'indeed ' : 'NOT ') + 'match!';
 }
 </script>
-<h1>Hello World i Javascript</h1>
+<h1>Hello World i JavaScript</h1>
 <p class='red'>Hello World in a HTML paragraph!</p>
 
 <script>

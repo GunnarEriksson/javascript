@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Flytta bollen | Javascript";
+$title = "Flytta bollen | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

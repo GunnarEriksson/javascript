@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Ändra storlek | Javascript";
+$title = "Ändra storlek | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

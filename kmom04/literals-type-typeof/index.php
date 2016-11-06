@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Literaler och typer | Javascript";
+$title = "Literaler och typer | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Roulette | Javascript";
+$title = "Roulette | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

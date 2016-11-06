@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Tärning | Javascript";
+$title = "Tärning | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "jQuery plugin | Javascript";
+$title = "jQuery plugin | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

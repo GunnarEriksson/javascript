@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Boulder Dash | Javascript";
+$title = "Boulder Dash | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

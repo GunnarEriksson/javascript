@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Hantering av strängar | Javascript";
+$title = "Hantering av strängar | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

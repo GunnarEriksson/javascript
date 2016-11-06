@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Flytta gubbe | Javascript";
+$title = "Flytta gubbe | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

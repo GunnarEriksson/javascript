@@ -11,7 +11,7 @@
 <body>
     <header id="header">
         <img src="../img/logo/logo.png" alt="The HTML, CSS and JS logo" />
-        <span id="header-title">Javascript</span>
+        <span id="header-title">JavaScript</span>
         <span id="header-slogan"><q>Databaser, HTML, CSS, JavaScript och PHP</q></span>
     </header>
 

@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Transform | Javascript";
+$title = "Transform | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

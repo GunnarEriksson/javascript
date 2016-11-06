@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Mall | Javascript";
+$title = "Mall | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 

@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Redovisning | Javascript";
+$title = "Redovisning | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 <article>
@@ -25,12 +25,26 @@ include(__DIR__ . "/../incl/header.php");
     Det känns som man får leta upp allting.</p>
 
     <h4>Vilken uppfattning har du av JavaScript så här långt?</h4>
-    <p>Jag har lång erfarenhet att koda Java, så får mig känns JavaScript som
-    ett ”vilt” språk. Fördelen är att det är kraftfullt, men som de flesta
-    skriptspråk så är det lätt att skriva svårläst kod som är svår att följa.
-    Fast jag kan hålla med författaren att JavaScript är lite missförstått som
-    språk. Mycket av det dåliga ryktet beror på gränssnittet mot DOM som inte
-    är alldeles självklart.</p>
+    <p>Jag har lång erfarenhet att koda Java, så får mig känns JavaScript som ett
+    ”vilt” språk. Fördelen är att det är kraftfullt, men som de flesta skriptspråk så
+    är det lätt att skriva svårläst kod som är svår att följa. I JavaScript kan det
+    mesta vara ett objekt, vilket t ex gör att man kan spara en hel funktion i en variabel.
+    Det blir med andra ord svårare att skilja en variabel som innehåller ett värde
+    från en variabel som innehåller en funktion vid första anblicken.</p>
+
+    <p>I Java använder man klasser för att bestämma ett objekts egenskaper. Råkar jag
+    skriva fel när jag tilldelar en variabel som tillhör ett objekt i Java, så får jag
+    ett fel när jag kompilerar koden. I JavaScript så skapar jag istället en ny variabel,
+    vilket gör det svårare när man felsöker.</p>
+
+    <p>En annan sak är att det mesta är globalt, vilket gör det lätt att skriva över
+    variabler av misstag. För att gömma synligheten för olika typer av data, får man
+    ta till lite tricks i JavaScript. Koden blir inte så enkel som den kunde bli.</p>
+
+    <p>För min egen del känns det som stegen mellan Java och PHP var betydligt kortare
+    än steget mellan Java och JavaScript kommer att vara. Även om det kommer ta lite
+    längre tid, så känner jag att det kommer gå bra att lära sig JavaScript. Det
+    gäller bara att ha ett annat tänk än i Java.</p>
 
     <h4>Berätta vilka exempelprogram du gjorde och länka till dem.</h4>
     <p>Jag gjorde de exempelprogrammen som fanns i övningen utan att modifiera
@@ -96,7 +110,7 @@ include(__DIR__ . "/../incl/header.php");
     till för att hitta på något extra som figuren kan göra, utan jag nöjde mig med
     att den bara kan gå omkring på spelplanen.</p>
 
-    <p>Den andra saken, var med hjälp av Javascript, förhindra att man kan skrolla
+    <p>Den andra saken, var med hjälp av JavaScript, förhindra att man kan skrolla
     sidan med hjälp av piltangenterna. Jag tyckte det var lite irriterande att hela
     sidan rörde sig, när man vandrade omkring med sin figur, om inte fönstret var
     tillräckligt stort för att visa hela sidan.</p>
@@ -104,7 +118,7 @@ include(__DIR__ . "/../incl/header.php");
     <p>Den tredje saken, var att förhindra att figuren flyter omkring om man ändrar
     storleken på sidan. Tidigare kunde figuren hamna både utanför spelplanen eller
     mitt i en mur, om man ändrade storleken på sidan. Jag funderade först att lösa
-    det med Javascript, men jag tyckte det var smidigare att bara lägga till en extra
+    det med JavaScript, men jag tyckte det var smidigare att bara lägga till en extra
     div runt spelplanen. Div-taggen fick också positionen absolute precis som figuren,
     vilket gör att den stannar kvar på sin plats om man ändrar sidans storlek.</p>
 
@@ -123,7 +137,7 @@ include(__DIR__ . "/../incl/header.php");
     lite väl mycket tittande i Mos kod. Det jag tyckte var svårt var att komma på
     en struktur. Här hade det underlättat med en liten punktlista som man kunde gå
     igenom. Gärna med lite tips på funktioner under vägen. Ett annat moment som
-    jag tyckte var svårt, var samspelet mellan Javascript och CSS.</p>
+    jag tyckte var svårt, var samspelet mellan JavaScript och CSS.</p>
 
     <p>De tre sista övningarna var dock mycket bra. Man lärde sig mycket på vägen när
     man arbetade med koden. Övningen med bollen, fick jag ta mycket hjälp av Mos kod,

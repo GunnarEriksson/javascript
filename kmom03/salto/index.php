@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Saltomortal | Javascript";
+$title = "Saltomortal | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 <article id="salto">

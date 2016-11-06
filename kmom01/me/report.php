@@ -1,6 +1,6 @@
 <?php
 include(__DIR__ . "/../incl/config.php");
-$title = "Redovisning | Javascript";
+$title = "Redovisning | JavaScript";
 include(__DIR__ . "/../incl/header.php");
 ?>
 <article>
@@ -25,12 +25,26 @@ include(__DIR__ . "/../incl/header.php");
     Det känns som man får leta upp allting.</p>
 
     <h4>Vilken uppfattning har du av JavaScript så här långt?</h4>
-    <p>Jag har lång erfarenhet att koda Java, så får mig känns JavaScript som
-    ett ”vilt” språk. Fördelen är att det är kraftfullt, men som de flesta
-    skriptspråk så är det lätt att skriva svårläst kod som är svår att följa.
-    Fast jag kan hålla med författaren att JavaScript är lite missförstått som
-    språk. Mycket av det dåliga ryktet beror på gränssnittet mot DOM som inte
-    är alldeles självklart.</p>
+    <p>Jag har lång erfarenhet att koda Java, så får mig känns JavaScript som ett
+    ”vilt” språk. Fördelen är att det är kraftfullt, men som de flesta skriptspråk så
+    är det lätt att skriva svårläst kod som är svår att följa. I JavaScript kan det
+    mesta vara ett objekt, vilket t ex gör att man kan spara en hel funktion i en variabel.
+    Det blir med andra ord svårare att skilja en variabel som innehåller ett värde
+    från en variabel som innehåller en funktion vid första anblicken.</p>
+
+    <p>I Java använder man klasser för att bestämma ett objekts egenskaper. Råkar jag
+    skriva fel när jag tilldelar en variabel som tillhör ett objekt i Java, så får jag
+    ett fel när jag kompilerar koden. I JavaScript så skapar jag istället en ny variabel,
+    vilket gör det svårare när man felsöker.</p>
+
+    <p>En annan sak är att det mesta är globalt, vilket gör det lätt att skriva över
+    variabler av misstag. För att gömma synligheten för olika typer av data, får man
+    ta till lite tricks i JavaScript. Koden blir inte så enkel som den kunde bli.</p>
+
+    <p>För min egen del känns det som stegen mellan Java och PHP var betydligt kortare
+    än steget mellan Java och JavaScript kommer att vara. Även om det kommer ta lite
+    längre tid, så känner jag att det kommer gå bra att lära sig JavaScript. Det
+    gäller bara att ha ett annat tänk än i Java.</p>
 
     <h4>Berätta vilka exempelprogram du gjorde och länka till dem.</h4>
     <p>Jag gjorde de exempelprogrammen som fanns i övningen utan att modifiera
