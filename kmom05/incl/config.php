@@ -11,18 +11,16 @@
  *                  to the file which was given in order to access
  *                  this page. If not, an empty string is returned.
  */
-function selectedPage($fileName)
-{
-    $class = '';
-    if (strpos($_SERVER['REQUEST_URI'], $fileName)) {
-        $class = 'selected';
-    } else {
-        if (isset($_SERVER["HTTP_REFERER"])) {
-            if (strpos($_SERVER["HTTP_REFERER"], "me/playground.php") && $fileName === "me/playground.php") {
-                $class = 'selected';
-            }
-        }
-    }
+ function selectedPage($fileName)
+ {
+     $class = '';
+     if (strpos($_SERVER['REQUEST_URI'], $fileName)) {
+         $class = 'selected';
+     } else {
+         if ($fileName === "me/playground.php" && strpos($_SERVER['REQUEST_URI'], "playground")) {
+             $class = 'selected';
+         }
+     }
 
-    return $class;
-}
+     return $class;
+ }

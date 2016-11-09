@@ -17,10 +17,8 @@ function selectedPage($fileName)
     if (strpos($_SERVER['REQUEST_URI'], $fileName)) {
         $class = 'selected';
     } else {
-        if (isset($_SERVER["HTTP_REFERER"])) {
-            if (strpos($_SERVER["HTTP_REFERER"], "me/playground.php") && $fileName === "me/playground.php") {
-                $class = 'selected';
-            }
+        if ($fileName === "me/playground.php" && strpos($_SERVER['REQUEST_URI'], "playground")) {
+            $class = 'selected';
         }
     }
 

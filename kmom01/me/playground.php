@@ -7,12 +7,12 @@ include(__DIR__ . "/../incl/header.php");
     <h1>Lekplats</h1>
     <h2>Testprogram i JavaScript</h2>
     <ul>
-        <li><a href="../hello-world/hello.php">Hello World i JavaScript</a></li>
-        <li><a href="../template/index.php">Mall</a></li>
-        <li><a href="../resize-element/index.php">Ändra storleken på ett element</a></li>
-        <li><a href="../move-around-sprite/index.php">Flytta en gubbe på skärmen</a></li>
-        <li><a href="../transform-with-transitions/index.php">CSS3 Transitions och 2D Transforms</a></li>
-        <li><a href="../salto/index.php">Stående dubbel saltomortal framåt</a></li>
+        <li><a href="../hello-world/hello.php?playground">Hello World i JavaScript</a></li>
+        <li><a href="../template/index.php?playground">Mall</a></li>
+        <li><a href="../resize-element/index.php?playground">Ändra storleken på ett element</a></li>
+        <li><a href="../move-around-sprite/index.php?playground">Flytta en gubbe på skärmen</a></li>
+        <li><a href="../transform-with-transitions/index.php?playground">CSS3 Transitions och 2D Transforms</a></li>
+        <li><a href="../salto/index.php?playground">Stående dubbel saltomortal framåt</a></li>
     </ul>
 </article>
 
