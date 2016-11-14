@@ -1,0 +1,31 @@
+/** --------------------------------------------------------------
+ * Baddie from CSS sprite.
+ *
+ */
+#move-around-sprite #b1 {
+    position:absolute;
+}
+
+#move-around-sprite .baddie {
+    background-image:url(../img/baddie/guer_geek.png);
+    height:64px;
+    width:64px;
+    .transition-property(e('left,top'));
+    .transition-duration(0.2s);.transition-timing-function(ease);
+}
+
+#move-around-sprite .baddie.up {
+    background-position:64px 0;
+}
+
+#move-around-sprite .baddie.down {
+    background-position:128px 0px;
+}
+
+#move-around-sprite .baddie.left {
+    background-position:192px 0;
+}
+
+#move-around-sprite .baddie.right {
+    background-position:0 0;
+}

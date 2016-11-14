@@ -1,29 +1,84 @@
 /**
- * Playing SpaceInvaders while learning JavaScript object model.
+ * Playing move the space ship on the moon
  */
-
-/*global Guer */
-/*global Audio */
 /*global Key */
+/*global Audio */
+/*global LunaLander */
 /*global requestAnimFrame */
-/*global SpaceInvaders */
 
-/**
- * Helper function to see if two vectors are intersecting
- *
- * @param  {number}  ax - The x-coordinate for the first object.
- * @param  {number}  ay - The y-coordinate for the first object.
- * @param  {number}  aw - The width of the first object.
- * @param  {number}  ah - The height of the first object.
- * @param  {number}  bx - The x-coordinate for the second object.
- * @param  {number}  by - The x-coordinate for the second object.
- * @param  {number}  bw - The width of the second object.
- * @param  {number}  bh - The height of the second object.
- *
- * @return {Boolean}  True if the objects intersects, false otherwise.
- */
-function isIntersect(ax, ay, aw, ah, bx, by, bw, bh) {
-    return ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah;
+ var groundBlocks = [
+     10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,10,11,
+     10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,10,10,10,10,10,10,10,10,10,10,11,11,
+     11,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,10,10,10,10,10,10,10,10,11,11,
+     11,11,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,10,10,10,10,10,10,10,10,10,10,11,
+     11,11,10,10,10,10,10,10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,11,11,11,
+     11,11,11,10,10,10,10,10,10,10,10,10,10,10,11,11,10,10,10,10,10,10,10,10,10,10,11,11,
+     11,11,11,10,10,10,10,10,10,10,10,10,10,11,11,11,10,10,10,10,10,10,10,10,10,10,11,11,
+     11,11,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,10,10,10,10,10,10,10,10,10,10,11,
+     11,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,10,10,10,10,10,10,10,10,10,10,11,
+     11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11];
+
+var platformBlocks = [10,10,10,10,10,12,12,12,10,10,10,10,10,10,10,10,10,10,10,10,12,12,12,10,10,10,10,10];
+
+// Returns an array with all corners position in the rectangle
+function getPixelsByAngle(x, y, halfWidth, halfHeight, angle) {
+   var bounds = [
+      //upper left
+      x + (halfWidth) * Math.cos(angle) - (halfHeight) * Math.sin(angle) + halfWidth,
+      y + (halfHeight) * Math.cos(angle) + (halfWidth) * Math.sin(angle) + halfHeight,
+      //upper right
+      x - (halfWidth) * Math.cos(angle) - (halfHeight) * Math.sin(angle) + halfWidth,
+      y + (halfHeight) * Math.cos(angle) - (halfWidth) * Math.sin(angle) + halfHeight,
+      //bottom right
+      x - (halfWidth) * Math.cos(angle) + (halfHeight) * Math.sin(angle) + halfWidth,
+      y - (halfHeight) * Math.cos(angle) - (halfWidth) * Math.sin(angle) + halfHeight,
+      //bottom left
+      x + (halfWidth) * Math.cos(angle) + (halfHeight) * Math.sin(angle) + halfWidth,
+      y - (halfHeight) * Math.cos(angle) + (halfWidth) * Math.sin(angle) + halfHeight
+   ];
+
+   return bounds;
+}
+
+// Test if the edges intersects.
+function edgeTest(p1, p2, p3, r2) {
+    var rot = [ -(p2[1] - p1[1]),
+                  p2[0] - p1[0] ];
+
+    var ref = (rot[0] * (p3[0] - p1[0]) +
+               rot[1] * (p3[1] - p1[1])) >= 0;
+
+    for (var i = 0, il = r2.length; i < il; i+=2) {
+        if (((rot[0] * (r2[i]   - p1[0]) +
+              rot[1] * (r2[i+1] - p1[1])) >= 0) === ref) return false;
+    }
+
+    return true;
+}
+
+// both rects must be specified as all four points in plain vector, like:
+//   [ x1, y1, x2, y2, x3, y3, x4, y4 ], clockwise from top-left point
+// their points must already be rotated and specified in global space before passing to this function
+function isIntersect(r1, r2) {
+    if (!r1 || !r2) throw new Error('Rects are not accessible');
+
+    var pn, px;
+    for (var pi = 0, pl = r1.length; pi < pl; pi += 2) {
+        pn = (pi === (pl - 2)) ? 0 : pi + 2; // next point
+        px = (pn === (pl - 2)) ? 0 : pn + 2;
+        if (edgeTest([r1[pi], r1[pi+1]],
+                     [r1[pn], r1[pn+1]],
+                     [r1[px], r1[px+1]], r2)) return false;
+    }
+
+    for (var pj = 0, pm = r2.length; pj < pm; pj += 2) {
+        pn = (pj === (pm - 2)) ? 0 : pj + 2; // next point
+        px = (pn === (pm - 2)) ? 0 : pn + 2;
+        if (edgeTest([r2[pj], r2[pj+1]],
+                     [r2[pn], r2[pn+1]],
+                     [r2[px], r2[px+1]], r1)) return false;
+    }
+    return true;
 }
 
 /**
@@ -38,7 +93,7 @@ window.requestAnimFrame = (function() {
            window.msRequestAnimationFrame     ||
            function( callback ) {
                window.setTimeout(callback, 1000 / 60);
-            };
+           };
 })();
 
 
@@ -47,7 +102,7 @@ window.requestAnimFrame = (function() {
  * Shim layer, polyfill, for cancelAnimationFrame with setTimeout fallback.
  */
 window.cancelRequestAnimFrame = (function() {
-    return window.cancelRequestAnimationFrame       ||
+    return window.cancelRequestAnimationFrame ||
            window.webkitCancelRequestAnimationFrame ||
            window.mozCancelRequestAnimationFrame    ||
            window.oCancelRequestAnimationFrame      ||
@@ -56,973 +111,500 @@ window.cancelRequestAnimFrame = (function() {
 })();
 
 
+
 /**
  * Trace the keys pressed
  * http://nokarma.org/2011/02/27/javascript-game-development-keyboard-input/index.html
  */
 window.Key = {
     pressed: {},
-    released: {},
 
     LEFT:   37,
+    UP:     38,
     RIGHT:  39,
-    SPACE:  32,
 
-    /**
-     * Checks if the key code of the pressed key is stored in the pressed array.
-     * The array is checked continuously.
-     *
-     * @param  {number}  keyCode - The key code of the pressed key.
-     * @return {Boolean}  True if the key code of the pressed key is stored in array.
-     */
     isDown: function(keyCode) {
         return this.pressed[keyCode];
     },
 
-    /**
-     * Sets the key code of the pressed key to true in the pressed key array.
-     * Indicates that a key has been pressed.
-     *
-     * @param  {Object}  event - The event object.
-     * @return {void}
-     */
     onKeydown: function(event) {
         this.pressed[event.keyCode] = true;
     },
 
-    /**
-     * Deletes the key code of the released key. Indicates that the pressed key
-     * has been released.
-     *
-     * @param  {Object}  event - The event object.
-     * @return {void}
-     */
     onKeyup: function(event) {
         delete this.pressed[event.keyCode];
     }
 };
 
-// Add event listener to key up and key down (jQuery). Connect the event to
-// the functions in Key object.
 window.addEventListener('keyup',   function(event) { Key.onKeyup(event); },   false);
 window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
 
 
 
 /**
- * Vector function with x- and y-coordinates.
- *
- * @param {number}  x - The x-coordinate of the vector.
- * @param {number}  y - The y-coordinate of the vector.
+ * All objects are Vectors
  */
 function Vector(x, y) {
     this.x = x || 0;
     this.y = y || 0;
 }
 
-
-
-/**
- * The cannon to shoot aliens with.
- *
- * @param {Object}  position - The vector position for the cannon.
- * @param {Object}  velocity - The velocity of the cannon movement as vector.
- * @param {Object}  aliens - The aliens object containing all aliens.
- */
-function Cannon(position, velocity, aliens) {
-    this.position           = position  || new Vector();
-    this.velocity           = velocity  || new Vector(1,1);
-    this.aliens             = aliens;
-    this.missiles           = new Missiles(aliens);
-    this.cannonWidth        = 45;
-    this.cannonHeight       = 25;
-    this.shouldBeRemoved    = false;
-    this.cannonExplosionPlayed = false;
-
-    aliens.createBeams(this);
-    this.cannonMissile = new Audio("../sound/cannon_missile.wav");
-    this.cannonMissile.volume = 0.3;
-
-    this.cannonExplosion = new Audio("../sound/cannon_explosion.wav");
-    this.cannonExplosion.volume = 0.3;
-
-
-}
-
-/**
- * The prototype of the cannon describing the characteristics of the cannon.
- *
- * @type {Object}
- */
-Cannon.prototype = {
-
-    /**
-     * Draws the cannon in a normal state and after the cannon has been hit by
-     * aliens.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    draw: function(ct) {
-        if (!this.shouldBeRemoved) {
-            ct.save();
-            ct.fillStyle = "rgb(79, 255, 48)";
-            ct.strokeStyle = "rgb(79, 255, 48)";
-            ct.translate(this.position.x, this.position.y); // Move whole space cannon
-            ct.beginPath();
-
-            ct.moveTo(0, 0);
-            ct.lineTo(this.cannonWidth, 0);
-            ct.lineTo(this.cannonWidth, -10);
-            ct.quadraticCurveTo(this.cannonWidth, -15, this.cannonWidth / 2, -15);
-            ct.quadraticCurveTo(0, -15, 0, -10);
-            ct.lineTo(0, 0);
-            ct.fillRect (18, -20, 11, 5);
-            ct.fillRect (21, -25, 5, 5);
-            ct.closePath();
-
-            ct.stroke();
-            ct.fill();
-            ct.restore();
-        } else {
-            if (!this.cannonExplosionPlayed) {
-                this.cannonExplosion.play();
-                this.cannonExplosionPlayed = true;
-            }
-
-            ct.save();
-            ct.fillStyle = "rgb(79, 255, 48)";
-            ct.strokeStyle = "rgb(79, 255, 48)";
-            ct.translate(this.position.x, this.position.y); // Move whole space cannon
-            ct.beginPath();
-
-            ct.moveTo(0, 0);
-            ct.lineTo(this.cannonWidth, 0);
-            ct.lineTo(this.cannonWidth, -15);
-            ct.lineTo(40, -10);
-            ct.lineTo(30, -15);
-            ct.lineTo(20, -10);
-            ct.lineTo(0, -15);
-            ct.lineTo(0, 0);
-            ct.rotate(-20*Math.PI/180);
-            ct.fillRect (18, -13, 11, 5);
-            ct.rotate(25*Math.PI/180);
-            ct.fillRect (13, -27, 5, 5);
-            ct.closePath();
-
-            ct.stroke();
-            ct.fill();
-            ct.restore();
-        }
-
-        this.missiles.draw(ct);
-    },
-
-    /**
-     * Moves the cannon to the left with one pixel muliplied with the velocity.
-     * The velocity is used to determine the speed of the cannons movement.
-     *
-     * @return {void}
-     */
-    moveLeft: function() {
-        this.position.x -= 1 * this.velocity.x;
-    },
-
-    /**
-     * Moves the cannon to the right with one pixel muliplied with the velocity.
-     * The velocity is used to determine the speed of the cannons movement.
-     *
-     * @return {void}
-     */
-    moveRight: function() {
-        this.position.x += 1 * this.velocity.x;
-    },
-
-    /**
-     * Fires the cannon. Checks if no missile is in the space before firing the
-     * cannon. If no missile is on the way, the position of the barrel of the
-     * cannon is set. Plays a sound when the cannon is fired.
-     *
-     * @return {void}
-     */
-    fire: function() {
-        if (this.missiles.missiles.length === 0) {
-            var gunPosX = this.position.x + 21;
-            var gunPosY = 450;
-            this.missiles.fire(new Vector(gunPosX, gunPosY), new Vector(4, 4));
-            this.cannonMissile.play();
-        }
-    },
-
-    /**
-     * Checks if the left, right or space key has been pressed to call respective
-     * function. Call the missile function to update the missile movement and to
-     * check if aliens has hit the cannon. Checks so the cannon stays in the areay.
-     *
-     * @param  {number}  width - The width of the cannon.
-     *
-     * @return {void}
-     */
-    update: function(td, width) {
-        if (Key.isDown(Key.LEFT))   this.moveLeft();
-        if (Key.isDown(Key.RIGHT))  this.moveRight();
-        if (Key.isDown(Key.SPACE))  this.fire();
-        this.missiles.update();
-        this.aliensHitCannon();
-        this.stayInArea(width);
-    },
-
-    /**
-     * Checks that the cannon stays on the game board.
-     *
-     * @param  {number}  width - The width of the cannon.
-     *
-     * @return {void}
-     */
-    stayInArea: function(width) {
-        if (this.position.x > (width - this.cannonWidth)) {
-            this.position.x = (width - this.cannonWidth);
-        }
-
-        if (this.position.x < 0) {
-            this.position.x = 0;
-        }
-    },
-
-    /**
-     * Checks if the cannon isIntersects with the aliens beams. If they are, the
-     * cannon is hit by the an alien beam.
-     *
-     * @param  {Object}  beamPos - The vector position of an alien beam.
-     *
-     * @return {Boolean}  True if the cannon is hit by an alien beam, false otherwise.
-     */
-    cannonHit: function(beamPos) {
-        if (isIntersect(this.position.x, this.position.y, this.cannonWidth, this.cannonHeight, beamPos.x, beamPos.y, 3, 5)) {
-            this.shouldBeRemoved = true;
-            return true;
-        } else {
-            return false;
-        }
-    },
-
-    /**
-     * Calls the aliens object to check if an alien has collided with the cannon.
-     * If the have, the game is over and the player has lost.
-     *
-     * @return {void}
-     */
-    aliensHitCannon: function() {
-        if (this.aliens.aliensHitCannon(this.position)) {
-            this.shouldBeRemoved = true;
-        }
-    }
+// The vector prototype
+Vector.prototype = {
+    muls:  function (scalar) { return new Vector( this.x * scalar, this.y * scalar); }, // Multiply with scalar
+    imuls: function (scalar) { this.x *= scalar; this.y *= scalar; return this; },      // Multiply itself with scalar
+    adds:  function (scalar) { return new Vector( this.x + scalar, this.y + scalar); }, // Multiply with scalar
+    iadd:  function (vector) { this.x += vector.x; this.y += vector.y; return this; }   // Add itself with Vector
 };
 
 /**
- * The missile fired by cannon.
- *
- * @param {Object}  position - The vector position for the cannon.
- * @param {Object}  velocity - The velocity of the missile movement as vector.
- * @param {Object}  aliens - The aliens object containing all aliens.
+ * A Ship as an object.
  */
-function Missile(position, velocity, aliens) {
+function Ship(width, height, position, grounds, platforms) {
+    this.width              = width     || 80;
+    this.height             = height    || 50;
     this.position           = position  || new Vector();
-    this.velocity           = velocity  || new Vector(1,1);
-    this.aliens             = aliens;
-    this.missileWidth       = 3;
-    this.shouldBeRemoved    = false;
-
+    this.grounds            = grounds;
+    this.platforms          = platforms;
+    this.velocity           = new Vector();
+    this.directionX         = "right";
+    this.directionY         = "up";
+    this.prevX              = 0;
+    this.prevY              = 0;
+    this.direction          = 1.5 * Math.PI;
+    this.gravity            = 1;
+    this.damp               = 0.999;
+    this.isOnStartPlatform  = true;
+    this.hasCrashed         = false;
+    this.hasLanded          = false;
+    this.hasTriedToLand     = false;
+    this.message            = "";
+    this.ship               = new window.Image();
+    this.ship.src           = "../img/game/space_ship.png";
+    this.exhaust            = new window.Image();
+    this.exhaust.src        = "../img/game/exhaust.png";
+    this.exhaustSound       = new Audio("../sound/exhaust.wav");
 }
 
-/**
- * The prototype of the missile describing the characteristics of the missiles.
- *
- * @type {Object}
- */
-Missile.prototype = {
-
-    /**
-     * Draws the missile as a green laser beam.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    draw: function(ct) {
-        ct.save();
-        ct.fillStyle = "rgb(79, 255, 48)";
-        ct.strokeStyle = "rgb(79, 255, 48)";
-        ct.translate(this.position.x, this.position.y);
-        ct.beginPath();
-        ct.fillRect (0, 0, 3, 5);
-        ct.closePath();
-
-        ct.stroke();
-        ct.fill();
-        ct.restore();
-    },
-
-    /**
-     * Moves the missile up with one pixel muliplied with the velocity.
-     * The velocity is used to determine the speed of the missiles movement.
-     *
-     * @return {void}
-     */
-    moveUp: function() {
-        this.position.y -= 1 * this.velocity.y;
-    },
-
-    /**
-     * Updates the missile movement and check if the missile has reached the
-     * top of the game board or has hit an alien.
-     *
-     * @return {void}
-     */
-    update: function() {
-        this.moveUp();
-        this.stayInArea();
-        if (this.aliens.aliensHit(this.position)) {
-            this.shouldBeRemoved = true;
-        }
-    },
-
-    /**
-     * Checks if the missile has reached the top of the game board and then
-     * should be removed.
-     *
-     * @return {void}
-     */
-    stayInArea: function() {
-        if (this.position.y < 0) {
-            this.shouldBeRemoved = true;
-        }
-    }
-};
-
-/**
- * The missiles object.
- * Used to control all missiles.
- *
- * @param {Object}  aliens - Contains all aliens.
- */
-function Missiles(aliens) {
-    this.aliens = aliens;
-    this.missiles = [];
-
-}
-
-/**
- * The missiles prototype which controls all missiles.
- * @type {Object}
- */
-Missiles.prototype = {
-
-    /**
-     * Draws all missiles.
-     *
-     * Draws all missiles that is stored in an array.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    draw: function(ct) {
-        for (var i = 0; i < this.missiles.length; i++) {
-            this.missiles[i].draw(ct);
-        }
-    },
-
-    /**
-     * Fires a missile by creating a missile and store the missile in the array
-     * of missiles.
-     *
-     * @param  {Object}  position - The start vector of the missile.
-     * @param  {Object}  velocity - The velocity of the missile. Only y-coordinate
-     *                              is used.
-     * @return {void}
-     */
-    fire: function(position, velocity) {
-        this.missiles.push(new Missile(position, velocity, this.aliens));
-    },
-
-    /**
-     * Updates all missiles and removes a missile from the array if the missile
-     * should be removed.
-     *
-     * @return {void}
-     */
-    update: function() {
-        var i = 0;
-        while (i < this.missiles.length) {
-            this.missiles[i].update();
-            if (this.missiles[i].shouldBeRemoved) {
-                this.missiles.shift();
-            }
-            i++;
-        }
-    },
-};
-
-/**
- * The alien trying to invade the earth.
- *
- * @param {Object}  position - The vector position for the alien.
- * @param {Object}  velocity - The velocity of the alien movement as vector.
- * @param {string}  direction - The dirction of the alien.
- */
-function Alien(position, velocity, direction) {
-    this.position           = position  || new Vector();
-    this.velocity           = velocity  || new Vector(1,1);
-    this.direction          = direction || "right";
-    this.newDirection       = direction || "right";
-    this.alienWidth         = 40;
-    this.alienHeight        = 27;
-    this.shouldBeRemoved    = false;
-    this.img                = new window.Image();
-    this.img.src            = "../img/game/alien1.gif";
-}
-
-/**
- * The prototype of the alien describing the characteristics of the alien.
- *
- * @type {Object}
- */
-Alien.prototype = {
-
-    /**
-     * Draws an alien by using an image.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
+// The ship prototype
+Ship.prototype = {
     draw: function(ct) {
         ct.save();
         ct.translate(this.position.x, this.position.y);
-        ct.beginPath();
-        ct.drawImage(this.img, 0, 0, this.alienWidth, this.alienHeight);
-        ct.closePath();
-
-        ct.stroke();
+        ct.translate(40, 25);
+        ct.rotate(this.direction);
+        ct.drawImage(this.ship, -40, -25, this.width, this.height);
+        if (Key.isDown(Key.UP)) {
+            ct.drawImage(this.exhaust, -64, -16, 32, 32);
+        }
         ct.restore();
     },
 
-    /**
-     * Moves the alien to the left with one pixel muliplied with the velocity.
-     *
-     * @return {void}
-     */
-    moveLeft: function() {
-        this.position.x -= 1 * this.velocity.x;
+
+    speed: function () {
+        return Math.sqrt(Math.pow(this.velocity.x, 2) + Math.pow(this.velocity.y, 2));
     },
 
-    /**
-     * Moves the alien to the right with one pixel muliplied with the velocity.
-     *
-     * @return {void}
-     */
-    moveRight: function() {
-        this.position.x += 1 * this.velocity.x;
+    move: function (td) {
+        // Luftmotstånd
+        (this.velocity).imuls(Math.pow(this.damp, this.speed() / 100));
+
+        // Gravitation
+        this.velocity.y += 20 * td;
+        this.position.x += this.velocity.x * td;
+        this.position.y += this.velocity.y * td;
     },
 
-    /**
-     * Updates the movement of the alien and checks if the alien stays in the area.
-     *
-     * @return {void}
-     */
-    update: function() {
-        if (this.direction === "right") {
-            this.moveRight();
-        } else {
-            this.moveLeft();
-        }
-
-        this.stayInArea();
-    },
-
-    /**
-     * Checks if the alien stays in the area by changing the direction of the
-     * alien when the alien has reached left or right border.
-     *
-     * @return {void}
-     */
-    stayInArea: function() {
-        if (this.position.x < 10) {
-            this.newDirection = "right";
-        }
-
-        if (this.position.x + this.alienWidth > 890) {
-            this.newDirection = "left";
+    rotateLeft: function (td) {
+        this.direction = (this.direction - td) % (2 * Math.PI);
+        if (this.direction < 0) {
+            this.direction += 2 * Math.PI;
         }
     },
 
-    /**
-     * Checks if a missile intersects with an alien. If so, the alien is hit.
-     *
-     * @param  {Object}  missilePos - The vector of the missile.
-     *
-     * @return {Boolean}  True if the alien has been hit, false otherwise.
-     */
-    alienHit: function(missilePos) {
-        if (isIntersect(this.position.x, this.position.y, this.alienWidth, this.alienHeight, missilePos.x, missilePos.y, 3, 5)) {
-            return true;
-        } else {
-            return false;
+    rotateRight: function (td) {
+        this.direction = (this.direction + td) % (2 * Math.PI);
+        if (this.direction < 0) {
+            this.direction += 2 * Math.PI;
         }
     },
 
-    /**
-     * Checks if an alien intersects with the cannon. If so the alien has hit
-     * the cannon.
-     *
-     * @param  {Object}  cannonPos - The vector of the cannon.
-     *
-     * @return {Boolean}   True if the alien has hit the cannon, false otherwise.
-     */
-    alienHitCannon: function(cannonPos) {
-        if (isIntersect(this.position.x, this.position.y, this.alienWidth, this.alienHeight, cannonPos.x, cannonPos.y, 45, 25)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-};
-
-/**
- * Aliens object which controls all the aliens.
- * Creates five rows with eleven aliens per row.
- */
-function Aliens() {
-    this.aliens = [];
-    this.aliensDirection = "left";
-    this.beams = null;
-    var posY = 10;
-    var alienNo = 0;
-    this.alienExplosion = new Audio("../sound/alien_explosion.wav");
-
-    for (var i = 0; i < 5; i++) {
-        var posX = 200;
-        for (var j = 0; j < 11; j++) {
-            this.aliens[alienNo] = new Alien(new Vector(posX, posY), new Vector(0.3, 0.3), this.aliensDirection);
-            alienNo++;
-            posX += 50;
-        }
-        posY += 27;
-    }
-}
-
-/**
- * The aliens prototype.
- * @type {Object}
- */
-Aliens.prototype = {
-    /**
-     * Creates the beams fired by the aliens.
-     *
-     * @param  {Object}  cannon - The vector where the cannon is located.
-     *
-     * @return {void}
-     */
-    createBeams: function(cannon) {
-        this.beams = new Beams(cannon, this);
+    throttle: function (td) {
+        this.isOnStartPlatform = false;
+        var acc = 40 * td;
+        var inc = new Vector(acc * Math.cos(this.direction), acc * Math.sin(this.direction));
+        (this.velocity).iadd(inc);
+        this.exhaustSound.play();
     },
 
-    /**
-     * Draws all aliens in the array and the beams.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    draw: function(ct) {
-        for (var i = 0; i < this.aliens.length; i++) {
-            this.aliens[i].draw(ct);
-        }
+    noThrottle: function() {
+        this.exhaustSound.pause();
+        this.exhaustSound.currentTime = 0;
+    },
 
-        if (this.beams) {
-            this.beams.draw(ct);
+    shipHitsGround: function() {
+        if (this.grounds.shipHitsGround(this)) {
+            this.hasCrashed = true;
         }
     },
 
-    /**
-     * Sets the direction of all aliens. When the aliens has reached the left
-     * or right border, all aliens is moved down one step.
-     */
-    setDirection: function() {
-        var isDirectionChanged = false;
-        var newDirection = this.aliensDirection;
-        var posY;
-
-        for (var i = 0; i < this.aliens.length; i++) {
-            if (this.aliensDirection !== this.aliens[i].newDirection) {
-                newDirection = this.aliens[i].newDirection;
-                isDirectionChanged = true;
-            }
-        }
-
-        if (isDirectionChanged) {
-            for (var j = 0; j < this.aliens.length; j++) {
-                this.aliensDirection = newDirection;
-                this.aliens[j].newDirection = newDirection;
-                this.aliens[j].direction = newDirection;
-                posY = this.aliens[j].position.y;
-                this.aliens[j].position.y = posY + 50;
-            }
+    shipHitsStartPlatform: function() {
+        if (this.platforms.shipHitsStartPlatform(this)) {
+            this.isOnStartPlatform = true;
         }
     },
 
-    /**
-     * Checks if aliens has been hit by a missile. If the an alien has been hit
-     * it is marked to be removed.
-     *
-     * @param  {Object}  missilePos - The vector of the missile location.
-     *
-     * @return {Boolean}  True if an alien has been hit by a missile, false otherwise.
-     */
-    aliensHit: function(missilePos) {
-        for (var i = 0; i < this.aliens.length; i++) {
-            if (this.aliens[i].alienHit(missilePos)) {
-                this.aliens[i].shouldBeRemoved = true;
-                return true;
-            }
-        }
-
-        return false;
-    },
-
-    /**
-     * Checks if any alien has hit the cannon.
-     *
-     * @param  {Object}  cannonPos - The vector of the cannon location.
-     *
-     * @return {Boolean}  True if an alien has hit the cannon, false otherwise.
-     */
-    aliensHitCannon: function(cannonPos) {
-        for (var i = 0; i < this.aliens.length; i++) {
-            if (this.aliens[i].alienHitCannon(cannonPos)) {
-                return true;
-            }
-        }
-
-        return false;
-    },
-
-    /**
-     * Updates all aliens. Removes aliens that have been hit by a missile from
-     * the array of aliens. Plays an sound of explosion when an alien is hit.
-     * Sets the dirction of all aliens and updates the beams fired by the aliens.
-     *
-     * @return {void}
-     */
-    update: function() {
-        for (var i = this.aliens.length -1; i >= 0; i--) {
-            this.aliens[i].update();
-            if (this.aliens[i].shouldBeRemoved) {
-                this.aliens.splice(i, 1);
-                this.alienExplosion.pause();
-                this.alienExplosion.currentTime = 0;
-                this.alienExplosion.play();
-            }
-        }
-
-        this.setDirection();
-        if (this.beams) {
-            this.beams.update();
-        }
-    },
-};
-
-/**
- * The beam fired by an alien.
- *
- * @param {Object}  position - The vector position for the alien.
- * @param {Object}  velocity - The velocity of the beam movement as vector.
- * @param {Object}  cannon - The cannon object containing the cannon.
- * @param {Object}  aliens - The aliens object containing all aliens.
- */
-function Beam(position, velocity, cannon, aliens) {
-    this.position           = position  || new Vector();
-    this.velocity           = velocity  || new Vector(1,1);
-    this.cannon             = cannon;
-    this.aliens             = aliens;
-    this.beamWidth          = 3;
-    this.shouldBeRemoved    = false;
-}
-
-/**
- * The prototype of the beam describing the beam characteristics.
- *
- * @type {Object}
- */
-Beam.prototype = {
-
-    /**
-     * Draws the beam as a red laser beam.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    draw: function(ct) {
-        ct.save();
-        ct.fillStyle = "rgb(255, 0, 0)";
-        ct.strokeStyle = "rgb(255, 0, 0)";
-        ct.translate(this.position.x, this.position.y);
-        ct.beginPath();
-        ct.fillRect (0, 0, 3, 5);
-        ct.closePath();
-
-        ct.stroke();
-        ct.fill();
-        ct.restore();
-    },
-
-    /**
-     * Moves the beam up with one pixel muliplied with the velocity.
-     * The velocity is used to determine the speed of the beam movement.
-     *
-     * @return {void}
-     */
-    moveDown: function() {
-        this.position.y += 1 * this.velocity.y;
-    },
-
-    /**
-     * Updates the beam movement and check if the beam has reached the
-     * bottom of the game board or has hit the gun.
-     *
-     * @return {void}
-     */
-    update: function() {
-        this.moveDown();
-        this.stayInArea();
-        if (this.cannon.cannonHit(this.position)) {
-            this.shouldBeRemoved = true;
-        }
-    },
-
-    /**
-     * Checks if the beam has reached the bottom of the game board and then
-     * should be removed.
-     *
-     * @return {void}
-     */
-    stayInArea: function() {
-        if (this.position.y > 500) {
-            this.shouldBeRemoved = true;
-        }
-    }
-};
-
-/**
- * The beams object.
- * Used to control all beams.
- *
- * @param {Object}  cannon - Contains cannon.
- * @param {Object}  aliens - Contains all aliens.
- */
-function Beams(cannon, aliens) {
-    this.cannon = cannon;
-    this.aliens = aliens;
-    this.beams = [];
-    this.delay = 20;
-    this.alienMissile = new Audio("../sound/alien_missile.wav");
-    this.alienMissile.volume = 0.3;
-}
-
-/**
- * The beam prototype which controls all beams.
- * @type {Object}
- */
-Beams.prototype = {
-
-    /**
-     * Draws all beams.
-     *
-     * Draws all beams that is stored in an array.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    draw: function(ct) {
-        for (var i = 0; i < this.beams.length; i++) {
-            this.beams[i].draw(ct);
-        }
-    },
-
-    /**
-     * Fires a beam by creating a beam and store the beam in the array
-     * of beams. The beams are fired with an delay and it is a randomly choosen
-     * alien that fires the beam. Only aliens without an another alien below
-     * could fire a beam.
-     *
-     * @return {void}
-     */
-    fire: function() {
-        var shouldFire = false;
-
-        if (this.delay > 0) {
-            this.delay -= 1;
-        } else {
-            shouldFire = true;
-            this.delay = 20;
-        }
-
-        if (shouldFire) {
-            var alienNo = Guer.random(0, this.aliens.aliens.length - 1);
-
-            var allowedToFire = true;
-            for (var i = 0; i < this.aliens.aliens.length; i++) {
-                if ( i !== alienNo) {
-                    if (this.aliens.aliens[i].position.x === this.aliens.aliens[alienNo].position.x) {
-                        if (this.aliens.aliens[i].position.y > this.aliens.aliens[alienNo].position.y) {
-                            allowedToFire = false;
-                        }
-                    }
-                }
-            }
-
-            if (allowedToFire) {
-                var beamPosX = this.aliens.aliens[alienNo].position.x + (this.aliens.aliens[alienNo].alienWidth / 2);
-                var beamPosY = this.aliens.aliens[alienNo].position.y + this.aliens.aliens[alienNo].alienHeight;
-                this.beams.push(new Beam(new Vector(beamPosX, beamPosY), new Vector(3, 3), this.cannon, this.aliens));
-                this.alienMissile.pause();
-                this.alienMissile.currentTime = 0;
-                this.alienMissile.play();
-            }
-        }
-    },
-
-    /**
-     * Updates all beams and removes a beam from the array if the beam
-     * should be removed.
-     *
-     * @return {void}
-     */
-    update: function() {
-        this.fire();
-        for (var i = this.beams.length -1; i >= 0; i--) {
-            this.beams[i].update();
-            if (this.beams[i].shouldBeRemoved) {
-                this.beams.splice(i, 1);
-            }
-        }
-    },
-};
-
-
-
-/**
- * The Space Invaders game.
- */
-window.SpaceInvaders = (function() {
-    var ct, cannon, lastGameTick, aliens, isCannonPresent, isAliensPresent, isGameOver;
-    var width, height;
-
-    /**
-     * Initiates the game.
-     *
-     * @param  {Object}  canvas - The canvas.
-     * @return {void}
-     */
-    var init = function(canvas) {
-        canvas = document.getElementById(canvas);
-        ct = canvas.getContext('2d');
-        width = 900;
-        height = 500;
-        ct.lineWidth = 1;
-        aliens = new Aliens();
-        cannon = new Cannon(new Vector(width / 2, height-20), new Vector(3, 3), aliens);
-        isCannonPresent = true;
-        isAliensPresent = true;
-        isGameOver = false;
-
-
-        console.log('Init the game');
-    };
-
-    /**
-     * Updates the game and check if the game is over or not.
-     *
-     * @param  {Object}  ct - The canvas context.
-     *
-     * @return {void}
-     */
-    var update = function(td) {
-        isCannonPresent = cannon.shouldBeRemoved === false ? true : false;
-        isAliensPresent = aliens.aliens.length > 0 ? true : false;
-
-
-        if (isCannonPresent && isAliensPresent) {
-            cannon.update(td, width);
-            aliens.update();
-        } else {
-            isGameOver = true;
-        }
-    };
-
-    /**
-     * Renders the game or the result of the game if the game is over.
-     *
-     * @return {void}
-     */
-    var render = function() {
-        ct.clearRect(0, 0, width, height);
-        cannon.draw(ct);
-        aliens.draw(ct);
-
-        if (isGameOver) {
-            ct.save();
-            ct.translate(width / 2, 200);
-            ct.font = "60px impact";
-            if (isCannonPresent) {
-                ct.fillStyle = '#009900';
-                ct.fillText('Grattis!', -80, 0, 300);
-                ct.font = "36px impact";
-                ct.fillText('Du vann!', -80, 50, 300);
+    shipHitsLandingPlatform: function() {
+        if (this.platforms.shipHitsLandingPlatform(this)) {
+            if (this.hasCrashed) {
+                this.hasTriedToLand = true;
             } else {
-                ct.fillStyle = '#FF0000';
-                ct.fillText('Tyvärr!', -80, 0, 300);
-                ct.font = "36px impact";
-                ct.fillText('Du förlorade!', -80, 50, 300);
+                this.hasLanded = true;
             }
-
-            ct.restore();
         }
-    };
+    },
 
-    /**
-     * The game loop that update the game continuously.
-     *
-     * @return {void}
-     */
-    var gameLoop = function() {
-        var now = Date.now();
-        var td = (now - (lastGameTick || now)) / 1000;
-        lastGameTick = now;
-        requestAnimFrame(gameLoop);
-        update(td);
-        render();
-    };
+    update: function(td) {
+        if (Key.isDown(Key.UP)) {
+            this.throttle(td);
+        } else {
+            this.noThrottle();
+        }
+        if (Key.isDown(Key.LEFT))   this.rotateLeft(td);
+        if (Key.isDown(Key.RIGHT))  this.rotateRight(td);
+        if (!this.isOnStartPlatform) {
+            this.move(td);
+        }
+        this.shipHitsGround();
+        this.shipHitsStartPlatform();
+        this.shipHitsLandingPlatform();
+        this.stayInArea();
+    },
 
-    return {
-        'init': init,
-        'gameLoop': gameLoop
-    };
+    stayInArea: function() {
+        if (this.position.x > 162 && this.position.x < 258 && this.position.y > 410 ) {
+            this.position.x = this.position.x;
+            this.position.y = 410;
+        }
+        if (this.position.y < 0) {
+            this.message = "Skeppet är utanför spelplanen";
+            this.hasCrashed = true;
+        }
+
+        if (this.position.x < 0 && this.position.x > this.width) {
+            this.message = "Skeppet är utanför spelplanen";
+            this.hasCrashed = true;
+        }
+    }
+};
+
+// The ground as an object.
+function Ground(position) {
+    this.position           = position  || new Vector();
+    this.groundWidth        = 32;
+    this.groundHeight       = 32;
+    this.ground             = new window.Image();
+    this.ground.src         = "../img/tiles/rock/rock.png";
+}
+
+// The ground prototype
+Ground.prototype = {
+    draw: function(ct) {
+        ct.save();
+        ct.translate(this.position.x, this.position.y);
+        ct.beginPath();
+        ct.drawImage(this.ground, 0, 0, this.groundWidth, this.groundHeight);
+        ct.closePath();
+
+        ct.stroke();
+        ct.restore();
+    },
+
+    shipHitsGround: function(ship) {
+        var shipPos = getPixelsByAngle(ship.position.x, ship.position.y, ship.width / 2, ship.height / 2, ship.direction);
+        var rockPos = getPixelsByAngle(this.position.x, this.position.y, this.groundWidth / 2, this.groundHeight / 2, Math.PI);
+
+        if (isIntersect(rockPos, shipPos)) {
+            ship.message = "Skeppet träffade marken";
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+// Grounds as an object. Controls all ground objects.
+function Grounds() {
+    this.grounds = [];
+    var posY = 178;
+    var groundItem = 0;
+    var posX = 2;
+    var noTilesInRow = 28;
+
+    for (var i = 0; i < groundBlocks.length; i++) {
+        if (noTilesInRow < 1) {
+            posX = 2;
+            posY += 32;
+            noTilesInRow = 28;
+        }
+
+        if (groundBlocks[i] === 11) {
+            this.grounds[groundItem] = new Ground(new Vector(posX, posY));
+            groundItem++;
+        }
+        posX += 32;
+        noTilesInRow--;
+    }
+}
+
+// The grounds prototype
+Grounds.prototype = {
+    draw: function(ct) {
+        for (var i = 0; i < this.grounds.length; i++) {
+            this.grounds[i].draw(ct);
+        }
+    },
+
+    shipHitsGround: function(ship) {
+        for (var i = 0; i < this.grounds.length; i++) {
+            if (this.grounds[i].shipHitsGround(ship)) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+};
+
+// The platform as an object.
+function Platform(position) {
+    this.position           = position  || new Vector();
+    this.platformWidth      = 32;
+    this.platformHeight     = 32;
+    this.platform           = new window.Image();
+    this.platform.src       = "../img/tiles/platform/platform.png";
+}
+
+// The platform prototype.
+Platform.prototype = {
+    draw: function(ct) {
+        ct.save();
+        ct.translate(this.position.x, this.position.y);
+        ct.beginPath();
+        ct.drawImage(this.platform, 0, 0, this.platformWidth, this.platformHeight);
+        ct.closePath();
+
+        ct.stroke();
+        ct.restore();
+    },
+
+    shipHitsStartPlatform: function(ship) {
+        var shipPos = getPixelsByAngle(ship.position.x, ship.position.y, ship.width / 2, ship.height / 2, ship.direction);
+        var platformPos = getPixelsByAngle(this.position.x, this.position.y, this.platformWidth / 2, this.platformHeight / 2, Math.PI);
+
+        if (isIntersect(platformPos, shipPos)) {
+            ship.hasCrashed = true;
+            if (ship.direction > 1.48 * Math.PI && ship.direction < 1.52 * Math.PI) {
+                if (ship.position.x > 146 && ship.position.x < 195) {
+                    if (parseInt(ship.speed()) < 11) {
+                        ship.hasCrashed = false;
+                    } else {
+                        ship.message = "Skeppet landade på startplattformen i högre hastighet än 10 km/h";
+                    }
+                } else {
+                    ship.message = "Skeppet landade utanför plattformen";
+                }
+            } else {
+                ship.message = "Landade i felaktig vinkel. Skeppet bröt ena landningstället";
+            }
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    shipHitsLandingPlatform: function(ship) {
+        var shipPos = getPixelsByAngle(ship.position.x, ship.position.y, ship.width / 2, ship.height / 2, ship.direction);
+        var platformPos = getPixelsByAngle(this.position.x, this.position.y, this.platformWidth / 2, this.platformHeight / 2, Math.PI);
+
+        if (isIntersect(platformPos, shipPos)) {
+            ship.hasCrashed = true;
+            if (ship.direction > 1.48 * Math.PI && ship.direction < 1.52 * Math.PI) {
+                if (ship.position.x > 626 && ship.position.x < 676) {
+                    if (parseInt(ship.speed()) < 11) {
+                        ship.hasCrashed = false;
+                    } else {
+                        ship.message = "Skeppet landade på plattformen i högre hastighet än 10 km/h";
+                    }
+                } else {
+                    ship.message = "Skeppet landade utanför plattformen";
+                }
+            } else {
+                ship.message = "Landade i felaktig vinkel. Skeppet bröt ena landningstället";
+            }
+            return true;
+        } else {
+            return false;
+        }
+    },
+};
+
+// The platforms as an object. Controls the start platform and landing platform.
+function Platforms() {
+    this.platforms = [];
+    var posY = 434;
+    var platformItem = 0;
+    var posX = 2;
+    var noTilesInRow = 28;
+
+    for (var i = 0; i < platformBlocks.length; i++) {
+        if (noTilesInRow < 1) {
+            posX = 2;
+            posY += 32;
+            noTilesInRow = 28;
+        }
+
+        if (platformBlocks[i] === 12) {
+            this.platforms[platformItem] = new Platform(new Vector(posX, posY));
+            platformItem++;
+        }
+        posX += 32;
+        noTilesInRow--;
+    }
+}
+
+Platforms.prototype = {
+    draw: function(ct) {
+        for (var i = 0; i < this.platforms.length; i++) {
+            this.platforms[i].draw(ct);
+        }
+    },
+
+    shipHitsStartPlatform: function(ship) {
+        for (var i = 0; i < 3; i++) {
+            if (this.platforms[i].shipHitsStartPlatform(ship)) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    shipHitsLandingPlatform: function(ship) {
+        for (var i = 3; i < 6; i++) {
+            if (this.platforms[i].shipHitsLandingPlatform(ship)) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+};
+
+
+/**
+ * LunaLander, the Game
+ */
+window.LunaLander = (function() {
+  var ct, ship, grounds, platforms, lastGameTick, isGameOver, width, height;
+  var hasShipCrashed, hasShipLanded, shipExplosionSound, isExplosionPlayed;
+
+  var init = function(canvas) {
+    canvas = document.getElementById(canvas);
+    ct = canvas.getContext('2d');
+    width = canvas.width;
+    height = canvas.height;
+    ct.lineWidth = 1;
+    ct.strokeStyle = 'hsla(0,0%,100%,1)';
+    platforms = new Platforms();
+    grounds = new Grounds();
+    ship = new Ship(80, 50, new Vector(170, 369), grounds, platforms);
+    hasShipCrashed = false;
+    hasShipLanded = false;
+    isGameOver = false;
+    shipExplosionSound = new Audio("../sound/spaceship-explosion.wav");
+    isExplosionPlayed = false;
+
+    console.log('Init the game');
+  };
+
+  var update = function(td) {
+      hasShipCrashed = ship.hasCrashed === true ? true : false;
+      hasShipLanded = ship.hasLanded === true ? true : false;
+
+      if (!hasShipCrashed && !hasShipLanded) {
+          ship.update(td, width, height);
+      } else {
+          isGameOver = true;
+      }
+  };
+
+  var render = function() {
+    ct.clearRect(0, 0, width, height);
+    platforms.draw(ct);
+    grounds.draw(ct);
+    ship.draw(ct);
+
+    ct.save();
+    ct.translate(20, 40);
+    ct.fillStyle = 'white';
+    ct.font = "36px serif";
+    ct.fillText(parseInt(ship.speed()), 0, 0);
+    ct.fillText("km/h", 40, 0);
+    ct.restore();
+
+    if (isGameOver) {
+        ship.exhaustSound.pause();
+        ship.exhaustSound.currentTime = 0;
+
+        ct.save();
+        ct.translate(250, 60);
+        ct.font = "60px impact";
+        if (hasShipLanded) {
+            ct.fillStyle = '#009900';
+            ct.fillText('Grattis!', -80, 0, 300);
+            ct.font = "36px impact";
+            ct.fillText('Du har landat skeppet!', -80, 50, 300);
+        } else {
+            if (!isExplosionPlayed) {
+                shipExplosionSound.play();
+                isExplosionPlayed = true;
+            }
+            ct.fillStyle = '#FF0000';
+            ct.fillText('Tyvärr!', -80, 0, 300);
+            ct.font = "36px impact";
+            ct.fillText('Du förlorade!', -80, 50, 300);
+            ct.fillText(ship.message, -80, 100, 600);
+        }
+
+        ct.restore();
+    }
+  };
+
+  var gameLoop = function() {
+    var now = Date.now();
+    var td = (now - (lastGameTick || now)) / 1000; // Timediff since last frame / gametick
+    lastGameTick = now;
+    requestAnimFrame(gameLoop);
+    update(td);
+    render();
+  };
+
+  return {
+      'init': init,
+      'gameLoop': gameLoop
+  };
+
 })();
 
 
 
-/**
- * Starts the JavaScript when the page is loaded.
- */
-$(function() {
-    'use strict';
-    SpaceInvaders.init('canvas1');
-    SpaceInvaders.gameLoop();
+// On ready
+$(function(){
+  'use strict';
 
-    console.log('Ready to play.');
+  LunaLander.init('canvas1');
+  LunaLander.gameLoop();
+
+  console.log('Ready to play.');
 });

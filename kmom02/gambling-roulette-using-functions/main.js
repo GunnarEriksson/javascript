@@ -1,7 +1,8 @@
 /**
- * Place your JS-code here.
+ * Roulette
  */
 /*global Guer */
+
 $(document).ready(function () {
     "use strict";
 
@@ -12,6 +13,7 @@ $(document).ready(function () {
     var bankroll = document.getElementById("bankroll");
     var bet = document.getElementById("bet");
     var log = document.getElementById("log");
+    var isSpinningTheWheelOngoing = false;
 
     console.log("Starting");
     element.className = "black";
@@ -21,7 +23,6 @@ $(document).ready(function () {
      * Spinning the wheel
      */
      function spinnTheWheel(numberOfTimes) {
-         console.log("Spinn the wheel starting");
          var i;
          var numbers = [];
          numberOfTimes = numberOfTimes || 1;
@@ -30,7 +31,7 @@ $(document).ready(function () {
              numbers[i] = Guer.random(0, 36);
          }
 
-         console.log("Spinn the wheel is ready");
+         console.log("Spinning the wheel numbers: " + numbers);
          return numbers;
      }
 
@@ -74,6 +75,7 @@ $(document).ready(function () {
         }
     }
 
+    // Prints text in the log div tag
     var print = function (element, text) {
         var el = document.createElement("p");
         el.innerHTML = text;
@@ -81,52 +83,74 @@ $(document).ready(function () {
         return element.insertBefore(el, element.firstChild);
     };
 
+    // Event listener for the roll button.
     button.addEventListener("click", function () {
-        var current = print(log, "&ndash; Bet is " + bet.value + " spinning the wheel&hellip;");
-        var results;
-        var showSpinn;
-        var pos = 0;
-        var spinns = 10;
+        if (!isSpinningTheWheelOngoing) {
+            isSpinningTheWheelOngoing = true;
 
-        showSpinn = function () {
-            console.log("showSpinn starts");
-            var number;
-            var bettingValue;
-            var actualValue;
+            var current;
+            var results;
+            var showSpinn;
+            var pos = 0;
+            var spinns = 10;
 
-            number = document.getElementById("n" + results[pos]);
-            number.className += " selected";
 
-            // Erase old indication on the roulette table.
-            if (pos > 0) {
-                number = document.getElementById("n" + (results[pos - 1]));
-                number.className = "number " + getColor(results[pos - 1]);
+            // Prints out text if the betting value was not greater than the bankroll.
+            if (parseInt(bet.value, 10) <= parseInt(bankroll.value, 10)) {
+                current = print(log, "&ndash; Bet is " + bet.value + " spinning the wheel&hellip;");
             }
 
-            pos += 1;
-            if (pos < spinns) {
+
+
+            // Show the random numbers on the roulette table. The function is called
+            // by it self with 500 ms delay.
+            showSpinn = function () {
+                var number;
+                var bettingValue;
+                var actualValue;
+
+                number = document.getElementById("n" + results[pos]);
+                number.className += " selected";
+
+                // Erase old indication on the roulette table.
+                if (pos > 0) {
+                    number = document.getElementById("n" + (results[pos - 1]));
+                    number.className = "number " + getColor(results[pos - 1]);
+                }
+
+                pos += 1;
+                if (pos < spinns) {
+                    window.setTimeout(showSpinn, 500);
+                } else {
+                    bettingValue = color.value;
+                    actualValue = getColor(results[pos - 1]);
+                    current.innerHTML += " Stopped at: " + results[pos - 1] + " " + actualValue;
+
+                    if (bettingValue.localeCompare(actualValue) === 0) {
+                        bankroll.value = parseInt(bankroll.value, 10) + parseInt(bet.value, 10);
+                        current.innerHTML += ". You won " + (parseInt(bet.value, 10)) + ".";
+                    } else {
+                        bankroll.value = parseInt(bankroll.value, 10) - parseInt(bet.value, 10);
+                        current.innerHTML += ". You lost " + (parseInt(bet.value, 10)) + ".";
+                    }
+
+                    isSpinningTheWheelOngoing = false;
+                }
+            };
+
+            clearRouletteTable();
+            if (parseInt(bet.value, 10) <= parseInt(bankroll.value, 10)) {
+                results = spinnTheWheel(10);
                 window.setTimeout(showSpinn, 500);
             } else {
-                bettingValue = color.value;
-                actualValue = getColor(results[pos - 1]);
-                current.innerHTML += " Stopped at: " + results[pos - 1] + " " + actualValue;
-
-                if (bettingValue.localeCompare(actualValue) === 0) {
-                    bankroll.value = parseInt(bankroll.value, 10) + parseInt(bet.value, 10);
-                    current.innerHTML += ". You won " + (parseInt(bet.value, 10)) + ".";
-                } else {
-                    bankroll.value = parseInt(bankroll.value, 10) - parseInt(bet.value, 10);
-                    current.innerHTML += ". You lost " + (parseInt(bet.value, 10)) + ".";
-                }
+                print(log, "&ndash; Betting value to high. Your bankroll is only " + bankroll.value + " and you will bet " + bet.value + " &hellip;");
+                isSpinningTheWheelOngoing = false;
             }
-        };
-
-        clearRouletteTable();
-        results = spinnTheWheel(10);
-        window.setTimeout(showSpinn, 500);
+        }
     }, false);
 
     drawRouletteTable();
+    print(log, "Welcome to the wheels of fortune!");
 
     console.log("Gambling roulette is ready");
 });

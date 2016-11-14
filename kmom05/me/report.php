@@ -123,10 +123,14 @@ include(__DIR__ . "/../incl/header.php");
     vilket gör att den stannar kvar på sin plats om man ändrar sidans storlek.</p>
 
     <h4>Gjorde du något extra på Roulettespelet?</h4>
-    <p>Nej, det räckte tiden inte till. Jag lade den mesta tiden på att själv skriva
-    koden för spelet, även om jag tog CSS-reglerna rakt av från Mos. Jag snyggade
-    sedan till koden med hjälp av Mos varianter, där jag tyckte jag själv hade gjort
-    det onödigt krångligt.</p>
+    <p>Jag gjorde två extra saker på spelet. Det första är att man inte kan satsa mer
+    än vad man har. Försöker man göra det så kommer det upp ett meddelande att man inte
+    kan satsa mer än vad man har.</p>
+
+    <p>Det andra, är att man inte kan snurra på hjulet om det inte redan snurrar.
+    Innan kunde man starta flera spel samtidigt, vilket resulterade i att flera rutor
+    var markerade på spelplanen när alla spel var klara. Inte så snygg och inte likt
+    det klassiska roulettespelet, där man bara kör med en kula åt gången.</p>
 
     <h4>Allmänt om kursmomentet.</h4>
     <p>Det här kursmomentet var en rejäl utmaning. De första övningarna, fram till
@@ -239,33 +243,28 @@ include(__DIR__ . "/../incl/header.php");
     även där.</p>
 
     <h4>Hur avancerat gjorde du din spelfysik (om du överhuvudtaget har någon i ditt spel)?</h4>
-    <p>Mitt spel är en variant av arkadspelet Space Invaders, där det inte behövs någon fysik.
-    Anledningen att jag ville göra det spelet, var att det var det första arkadspelet jag spelade
-    när jag var barn. Jag ville också göra något helt annorlunda än exemplet, för att undvika att
-    det blev en kopia med några utökningar. Nu fick jag jobba mer med grunden, vilket jag lärde
-    mig mycket av.</p>
+    <p>I mitt spel behövde jag något som dämpar raketens rörelse och en gravitation som vill dra
+    ned rymdskeppet mot månen. Jag försökte först använda koden för krafterna i övningsexemplet,
+    men insåg efter några mindre lyckade försök att det skulle ta för lång tid att gå ned på djupet
+    för att förstå hur det fungerar.</p>
+
+    <p>Det fick bli en enklare variant istället, där jag utgick från en tidigare kursare och anpassade
+    koden för mina egna behov till jag blev nöjd med resultatet.</p>
 
     <h4>Beskriv och berätta om ditt spel. Förklara hur du använder objekt och prototyper.</h4>
-    <p>Spelet är en variant av det gamla arkadspelet Space Invaders, där det gäller att hindra
-    utomjordingarna att nå jorden. Spelaren manöverar en kanon med höger och vänster piltangent och
-    skjuter med mellanslag.</p>
+    <p>Mitt spel är enkelt. Man ska flytta en raket från en plattform till en annan på månen. Raketen
+    flyttas genom att man lutar raketen samtidigt som man avfyrar raketmotorn. Detta sköts med hjälp av
+    piltangenterna. För att lyckas landa raketen måste man hålla sig inom spelplanen, undvika klipporna,
+    hålla sig inom plattformen, landa på landningsstället utan att luta raketen och inte ha högre
+    landningshastighet än 10 km/h.</p>
 
-    <p>Det gäller att skjuta ned alla utomjordingar innan de når jorden, samt att undvika
-    utomjordingarnas missiler i form av röda laserstrålar.</p>
+    <p>Jag använder objekt och prototyper som i övningsexemplen. Objektet fungerar som en konstruktor när
+    man vill skapa ett objekt och prototypen definierar objektets beteende.</p>
 
-    <p>Utomjordingarna skjuter slumpvisa missiler om det inte finns någon utomjording nedanför.
-    <p>Skjuthastigheten i kanonen är begränsad till att bara kunna ha en missil, i form av en grön
-    laserstråle, i rymden samtidigt. Den förra missilen måste försvinna innan man kan skjuta en ny.</p>
-
-    <p>Jag har sju stycken objekt och prototyper. Det är Cannon, Missiles, Missile, Aliens, Alien,
-    Beams, Beam.</p>
-
-    <p>Missiles, Aliens och Beams är speciella då de genom en array hanterar sina respektive objekt.
-    Jag tyckte det var smidigt att arbeta med arrayer för att hantera flera objekt. När man skapade
-    ett objekt, t ex en stråle (Beam), så lade Beams in den i en array. Skulle stålen (Beam) tas bort,
-    tog jag bort den i arrayen med hjälp av splice-funktionen. På så sätt var det enkelt att hantera
-    flera objekt samtidigt. Jag behöll mönstret även för missiler, även om det bara kan finnas en
-    missil i rymden åt gången, då det blev smidigt att lägga till respektive ta bort en missil.</p>
+    <p>Jag har också skapat objekt som kontrollerar andra objekt av samma typ genom att spara dessa i en
+    array. Med hjälp av arrayen kan sedan alla objekt i arrayen anropas vid behov. Då kan t ex varje
+    klipp-objekt svara på om skeppet har träffat respektive objekt eller inte och på så sätt avgöra om
+    spelet kan fortsätta eller spelet ska avslutas.</p>
 
     <h4>Gjorde du något på extrauppgiften?</h4>
     <p>Ja, det gjorde jag. När jag hade satt mig in hur man gör, så var det inte särskilt svårt. I
@@ -274,16 +273,22 @@ include(__DIR__ . "/../incl/header.php");
     sida med gratis ljud som man kan använda. Man behövde dock registrera sig för att kunna ladda ned
     ljudfiler.</p>
 
-    <p>De ljud jag lade till var när utomjordingarna skjuter missiler, när utomjordingar träffas av
-    missil från kanon, när kanon skjuter en missil och när kanonen träffas av en missil från
-    utomjordingarna.</p>
-
-    <p>Att lägga till ljud gav spelet en helt annan dimension än när det inte fanns något ljud.</p>
+    <p>De ljud jag lade till var när man avfyrar raketmotorn och när skeppet kraschar. Att lägga till
+    ljud gav spelet en helt annan dimension än när det inte fanns något ljud.</p>
 
     <h4>Allmänt om kursmomentet</h4>
     <p>Det här var ett roligt kursmoment när man väl kom igång. Jag kunde nog spenderat mer tid om inte
     man var tvungen att hålla sig till studieplanen. Man kan lägga till hur mycket som helst för att
     förfina spelet.</p>
+
+    <p>Mina egna svårigheter var först och främst att få till krafterna som påverkar skeppet. Här var
+    nog mina matematikkunskaper väl rostiga. Något annat som var knepigt var att få till skärningspunkter
+    när skeppet är roterat. Efter lite sökning hittade jag två exempel som jag fick kombinera för att jag
+    skulle kunna avgöra om skeppet har stött emot något eller inte. Nu fungerar det nästan. Problemet är
+    att skeppet är en bild i form av en rektangel. Skeppet figur fyller dock inte hela rektangeln,
+    speciellt i nosen. Detta resulterar att spelet säger att skeppet har kraschat när det är lite
+    avstånd kvar mellan skeppets topp och klippan. Det skulle säkert gå att förfina, men det går vara
+    för den här gången.</p>
 
     <p>Jag tyckte också att momentet kan en bra förståelse för hur man kan skapa objekt och skapa
     prototyper till objekten. Gameloop var också bra att lära sig hur den fungerar för att kunna skapa

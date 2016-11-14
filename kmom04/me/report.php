@@ -123,10 +123,14 @@ include(__DIR__ . "/../incl/header.php");
     vilket gör att den stannar kvar på sin plats om man ändrar sidans storlek.</p>
 
     <h4>Gjorde du något extra på Roulettespelet?</h4>
-    <p>Nej, det räckte tiden inte till. Jag lade den mesta tiden på att själv skriva
-    koden för spelet, även om jag tog CSS-reglerna rakt av från Mos. Jag snyggade
-    sedan till koden med hjälp av Mos varianter, där jag tyckte jag själv hade gjort
-    det onödigt krångligt.</p>
+    <p>Jag gjorde två extra saker på spelet. Det första är att man inte kan satsa mer
+    än vad man har. Försöker man göra det så kommer det upp ett meddelande att man inte
+    kan satsa mer än vad man har.</p>
+
+    <p>Det andra, är att man inte kan snurra på hjulet om det inte redan snurrar.
+    Innan kunde man starta flera spel samtidigt, vilket resulterade i att flera rutor
+    var markerade på spelplanen när alla spel var klara. Inte så snygg och inte likt
+    det klassiska roulettespelet, där man bara kör med en kula åt gången.</p>
 
     <h4>Allmänt om kursmomentet.</h4>
     <p>Det här kursmomentet var en rejäl utmaning. De första övningarna, fram till
