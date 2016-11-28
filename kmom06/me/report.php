@@ -222,7 +222,11 @@ include(__DIR__ . "/../incl/header.php");
     i formuläret, som t ex att fälten måste fyllas i och vissa fält måste bestå av siffror.</p>
 
     <h4>Lyckades du göra extra-uppgiften och paketera din kod?</h4>
-    <p>Nej, tiden tog slut så jag väljer att börja på nästa moment istället.</p>
+    <p>Ja, det gjorde jag. Jag följde exemplet som finns i Kmom03 och bröt ut min jQuery-kod och lade
+    den i en funktion så som det beskrivs i Kmom03. Funktionen anropas sedan från min main.js.</p>
+
+    <p>Jag gjorde sedan om mina HTML-filer så att de kunde användas fristående för att jag ska kunna
+    visa upp en demo för mitt paket. Allt finns sparat på GitHub.</p>
 
     <h4>Allmänt om kursmomentet</h4>
     <p>Jag tyckte det var ett roligt och lärorikt moment som visar hur smidigt det går att skicka

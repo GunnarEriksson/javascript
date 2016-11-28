@@ -6,7 +6,7 @@ $currentYear = date('Y');
 $elements = array(
     'name' => array(
       'type'        => 'text',
-      'label'       => 'Name på kreditkort:',
+      'label'       => 'Namn på kreditkort:',
       'required'    => true,
       'validation'  => array('not_empty')
     ),
