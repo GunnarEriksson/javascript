@@ -1,4 +1,5 @@
-var port = 1337;
+//var port = 1337;
+var port = 8069;
 var broadcastTo = [];
 var wsServer;
 
@@ -20,7 +21,8 @@ httpServer.listen(port, function() {
 
 // Require the modules we need
 //var WebSocketServer = require('websocket').server;
-var WebSocketServer = require('../../../../node_modules/websocket').server;
+//var WebSocketServer = require('../../../../node_modules/websocket').server;
+var WebSocketServer = require('/home/saxon/students/20161/guer16/node_modules/websocket').server;
 
 // Create an object for the websocket
 // https://github.com/Worlize/WebSocket-Node/wiki/Documentation

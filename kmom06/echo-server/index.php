@@ -9,7 +9,7 @@ include(__DIR__ . "/../incl/header.php");
     <div id='flash'>
         <form id='client-form'>
             <p>
-                <label>Adress: </label><br/><input id='url' value='ws://localhost:1337'/>
+                <label>Adress: </label><br/><input id='url' value='ws://nodejs1.student.bth.se:8059'/>
                 <input id='connect' type='button' value='Anslut'/>
                 <input id='disconnect' type='button' value='Stäng ned'/>
             </p>

@@ -300,7 +300,52 @@ include(__DIR__ . "/../incl/header.php");
     figur på ett spelplan.</p>
 
     <h2>Kmom06: HTML5 och Websockets</h2>
-    <p>Är ännu inte redovisad.</p>
+    <h4>Vilka möjligheter ser du med HTML5 Websockets?</h4>
+    <p>Jag har använt websockets i två tidigare distanskurser, fast då i andra programspråk. Jag tycker det
+    är mycket trevligt att arbeta med websockets och det verkar, oavsett programspråk, lätt att komma i gång
+    att arbeta med. Skulle jag idag behöva använda mig av datakommunikation, så skulle jag börja titta på en
+    lösning med websockets.</p>
+
+    <p>Områden där jag kan använda websockets, är förutom chatt, vid spel där flera spelare är inblandade i
+    realtid och där man behöver hela tiden uppdatera sig vad de andra spelarna gör i realtid.</p>
+
+    <h4>Vad tycker du om Node.js och hur känns det att programmera i det?</h4>
+    <p>Jag har hört namnet förr, men jag har bara vetat att det handlade om Javascript-programmering på
+    serversidan. Det var därför kul att få arbeta lite med Node.js i det här momentet.</p>
+
+    <p>Det gick enkelt att installera och komma igång med Node.js på Windows. Exemplen var bra och det var
+    inte svårt att förstå koden. Att arbeta lokalt gick också smidigt, där man kunde använda sig av logg-funktionen
+    för att hitta fel som man hade gjort.</p>
+
+    <p>Det som var krångligare var att få det att fungera på studentservern. Det krävdes lite moment för att
+    få igång det hela. Man har varit lite bortskämd i de tidigare momenten (även i de tidigare kurserna) att man
+    kunde arbeta lokalt och sedan bara ladda upp koden och testköra.</p>
+
+    <h4>Beskriv hur du löste echo-servern och broadcast-servern.</h4>
+    <p>Jag följde de exempel som man gick igenom i det här momentet när jag byggde mina servrar. Istället gick
+    jag igenom noggrant hur exemplen fungerar för att förstå mer i detalj. Ibland lade jag till tillfälliga
+    loggutskrifter för att få en djupare analys av koden.</p>
+
+    <h4>Beskriv och berätta om din chatt. Förklara hur du byggde din chatt-server och förklara protokollet.</h4>
+    <p>När jag hade gjort övningen med broadcast-servern, funderade jag vad som är skillnaden mellan en
+    broadcast-server och en chatt-server. Min egen slutsats var att det inte är någon större skillnad mellan
+    dessa båda servrar. Det enda skiljer, är att i chatten behöver man även skicka med användarnamnet. Efter
+    lite funderande och googlande, verkade det som en JSON-struktur är den bästa lösningen. Användarnamnet fick
+    då bli en post och meddelanden en annan post i JSON-strukturen. Jag kan bara efteråt konstatera att det är
+    smidigt att arbeta med JSON.</p>
+
+    <p>På klientsidan gjorde jag om formuläret lite från de tidigare övningarna för att den skulle likna en
+    chatt lite mer. Jag lade till en ruta för användare som måste vara ifylld när man ansluter till servern.
+    Har man inte fyllt i något namn, får man ett felmeddelande i loggen att man måste fylla i användare om
+    man ska ansluta till chatten.</p>
+
+    <h4>Gjorde du något på extrauppgiften?</h4>
+    <p>Nej, det blev inget extra den här gången. Det är hög tid att börja på projektet.</p>
+
+    <h4>Allmänt om kursmomentet</h4>
+    <p>Det var kul att få komma i kontakt med Node.js. Jag har hört från olika håll att man börjar göra mer och
+    mer i Javascript när det gäller webbprogrammering och där bland annat Node.js blir en allt viktigare del
+    när det gäller serversidan.</p>
 
     <h2>Kmom07 - 10: Projekt</h2>
     <p>Är ännu inte redovisad.</p>
